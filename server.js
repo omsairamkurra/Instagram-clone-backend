@@ -1,5 +1,6 @@
 const express = require('express');
 const mongoose = require('mongoose');
+const bcrypt = require('bcryptjs');
 const cors = require('cors');
 
 const app = express();
@@ -27,7 +28,18 @@ const User = mongoose.model('User', userSchema);
 // Create a new user
 app.post('/users', async (req, res) => {
   try {
-    const user = new User(req.body);
+    const { username, email, password } = req.body;
+
+    // Generate a salt and hash the password
+    const salt = await bcrypt.genSalt(10);
+    const hashedPassword = await bcrypt.hash(password, salt);
+
+    const user = new User({
+      username,
+      email,
+      password: hashedPassword,
+    });
+
     await user.save();
     res.status(201).json(user);
   } catch (err) {
