@@ -1,2 +1,2 @@
 # Instagram-clone-backend
-Youtube-clone-backend
+Instagram-clone-backend
